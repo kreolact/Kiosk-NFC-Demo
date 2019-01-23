@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
 import { HomePage } from '../pages/home/home';
+
+declare let window: any;
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -12,10 +14,21 @@ export class MyApp {
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
+      if (platform.is('cordova')) {
+        statusBar.styleBlackOpaque();
+        splashScreen.hide();
+        window.KioskPlugin.isInKiosk(isInKiosk => {
+          console.error("InKioskMode", isInKiosk)
+        });
+        window.KioskPlugin.isSetAsLauncher(isLauncher => {
+          console.error("isSetAsLauncher", isLauncher)
+        });
+        statusBar.show();
+        platform.registerBackButtonAction(() => {
+          window.KioskPlugin.exitKiosk();
+          // this.platform.exitApp();
+        });
+      }
     });
   }
 }

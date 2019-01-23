@@ -1,5 +1,7 @@
 {
   "name": "Kiosk and NFC Demo",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }
